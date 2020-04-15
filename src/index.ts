@@ -1,15 +1,13 @@
+import "reflect-metadata"; // this shim is required
+import {createExpressServer} from "routing-controllers";
 
-import * as dotenv from 'dotenv'
+import {EventController} from "./controllers/EventController";
 
-dotenv.config()
+// creates express app, registers all controller routes and returns you express app instance
+const app = createExpressServer({
+  controllers: [
+    EventController,
+  ]
+});
 
-import { initService } from './app';
-
-initService()
-.then(() => {
-  console.log('Running server')
-})
-.catch((err: Error) => {
-  console.log(err)
-})
-
+app.listen(8000);
