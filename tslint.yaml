@@ -1,0 +1,9 @@
+---
+extends: tslint-config-globalid
+rules:
+  no-useless-files: false
+  no-unused: true
+  no-unused-variable: false
+  await-promise: [true, "PromiseLike", "Bluebird", "Thenable"]
+  #To be removed once issues with atlas are fixed!!!
+  no-unsafe-any: false

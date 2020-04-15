@@ -1,0 +1,34 @@
+{
+ "check-coverage": true,
+ "per-file": true,
+ "lines": 100,
+ "statements": 100,
+ "functions": 100,
+ "branches": 100,
+ "include": [
+   "src/**/*.ts",
+   "src/**/*.tsx"
+ ],
+ "exclude": [
+  "src/**/*.d.ts",
+  "src/**/*.spec.ts",
+  "src/controllers/errors.ts",
+  "src/index.ts",
+  "src/conf.ts",
+  "src/services/elasticsearch/index.ts"
+ ],
+ "extension": [
+   ".ts",
+   ".tsx"
+ ],
+ "require": [
+   "ts-node/register"
+ ],
+ "reporter": [
+   "text",
+   "html"
+ ],
+ "sourceMap": true,
+ "instrument": true,
+ "all": true
+}
