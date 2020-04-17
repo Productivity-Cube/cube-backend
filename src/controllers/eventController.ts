@@ -1,13 +1,15 @@
 import { Controller, Get } from 'routing-controllers'
-import { User } from '../models/user'
+import { UserDao } from '../dao/userDao'
 
 @Controller()
 export class EventController {
+  constructor (private readonly userDao: UserDao) {
+  }
 
   @Get('/events')
   async getAll (): Promise<string> {
     return JSON.stringify(
-      await User.findAll()
+      await this.userDao.getByName('user1')
     )
   }
 }

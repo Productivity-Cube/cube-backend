@@ -348,3 +348,4 @@ rules:
   no-unsafe-any: false
   no-default-export: false
   no-reserved-keywords: false
+  no-parameter-properties: false
