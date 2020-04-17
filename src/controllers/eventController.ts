@@ -3,13 +3,15 @@ import { UserDao } from '../dao/userDao'
 
 @Controller()
 export class EventController {
-  constructor (private readonly userDao: UserDao) {
+  constructor (
+    private readonly userDao: UserDao,
+    // private readonly apiKeyDao: ApiKeyDao,
+    ) {
   }
 
   @Get('/events')
-  async getAll (): Promise<string> {
-    return JSON.stringify(
-      await this.userDao.getByName('user1')
-    )
+  // tslint:disable-next-line:no-any
+  async getAll (): Promise<any> {
+    return JSON.stringify(await this.userDao.getByName('user1'))
   }
 }

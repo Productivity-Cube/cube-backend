@@ -1,5 +1,6 @@
 import { User } from '../models/user'
 import { Database } from '../bootstrap/database'
+import { ApiKey } from '../models/apiKey'
 
 export class UserDao {
   constructor (private readonly database: Database) {
@@ -9,7 +10,10 @@ export class UserDao {
     return User.findOne({
       where: {
         name,
-      }
+      },
+      include: [{
+        model: ApiKey,
+      }]
     })
   }
 }

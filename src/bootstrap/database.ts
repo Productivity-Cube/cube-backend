@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize-typescript'
 import { User } from '../models/user'
+import { ApiKey } from '../models/apiKey'
 
 export class Database {
   private readonly sequelize: Sequelize
@@ -11,6 +12,7 @@ export class Database {
 
   registerModels (): void {
     this.sequelize.addModels([
+      ApiKey,
       User,
     ])
   }

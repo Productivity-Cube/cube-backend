@@ -2,15 +2,19 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Users', {
+    return queryInterface.createTable('ApiKeys', {
       uuid: {
         primaryKey: true,
         type: Sequelize.STRING(36),
       },
-      name: {
+      key: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
+      },
+      userId: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -21,6 +25,6 @@ module.exports = {
     })
   },
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Users');
+    return queryInterface.dropTable('ApiKeys');
   }
 };
