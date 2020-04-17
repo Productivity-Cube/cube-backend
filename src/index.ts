@@ -1,13 +1,19 @@
-import "reflect-metadata"; // this shim is required
-import {createExpressServer} from "routing-controllers";
+// tslint:disable-next-line:no-import-side-effect
+import 'reflect-metadata'
+import { createExpressServer } from 'routing-controllers'
 
-import {EventController} from "./controllers/EventController";
+import { EventController } from './controllers/eventController'
+import { registerDependencyInjection } from './dependencyInjection'
+import { DependencyInjection } from './dependencyInjection/dependencyInjection'
+import { StatusController } from './controllers/statusController'
 
-// creates express app, registers all controller routes and returns you express app instance
-const app = createExpressServer({
+export const DI: DependencyInjection = registerDependencyInjection()
+
+const app: { listen: Function } = createExpressServer({
   controllers: [
     EventController,
+    StatusController,
   ]
-});
+})
 
-app.listen(8000);
+app.listen(8000)

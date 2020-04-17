@@ -11,7 +11,10 @@
     "build:lib": "tsc --declaration",
     "test:integration": "nyc --nycrc-path .nyrc_integration npm run test:cmd -- \"tests/e2e/**/*_test.ts\"",
     "test:unit": "npm run test:cmd -- \"src/**/*.spec.ts\"",
-    "lint": "tslint -p tsconfig-lint.json \"src/**/*.ts\"  \"tests/**/*.ts\""
+    "lint": "tslint -p tsconfig-lint.json \"src/**/*.ts\"  \"tests/**/*.ts\"",
+    "sequelize": "sequelize $1",
+    "sequelize:migrate": "sequelize db:migrate",
+    "sequelize:newmigration": "sequelize migration:create --name $1"
   },
   "repository": {
     "type": "git",
@@ -41,10 +44,13 @@
     "typescript-eslint-parser": "^22.0.0"
   },
   "dependencies": {
+    "@types/bluebird": "^3.5.30",
     "@types/body-parser": "^1.19.0",
     "@types/chai": "^4.2.11",
     "@types/chai-as-promised": "^7.1.2",
     "@types/express": "^4.17.6",
+    "@types/node": "^13.11.1",
+    "@types/validator": "^13.0.0",
     "body-parser": "^1.19.0",
     "chai-as-promised": "^7.1.1",
     "class-transformer": "^0.2.3",
@@ -57,9 +63,19 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "mysql": "^2.18.1",
+    "mysql2": "^2.1.0",
     "net": "^1.0.2",
     "rimraf": "^3.0.2",
     "routing-controllers": "^0.8.1-alpha.2",
+    "sequelize": "^5.21.6",
+    "sequelize-typescript": "^1.1.0",
+    "tslint-clean-code": "^0.2.10",
+    "tslint-config-standard": "^9.0.0",
+    "tslint-consistent-codestyle": "^1.16.0",
+    "tslint-immutable": "^6.0.1",
+    "tslint-microsoft-contrib": "^6.2.0",
+    "tslint-plugin-ikatyang": "^1.1.1",
+    "tslint-sonarts": "^1.9.0",
     "uuid": "^7.0.3"
   },
   "standard": {
