@@ -1,10 +1,27 @@
-import { AllowNull, Column, DataType, Model, PrimaryKey, Table, Unique, BelongsTo, ForeignKey } from 'sequelize-typescript'
+import {
+  AllowNull,
+  Column,
+  DataType,
+  Model,
+  PrimaryKey,
+  Table,
+  Unique,
+  BelongsTo,
+  ForeignKey
+} from 'sequelize-typescript'
 import { User } from './user'
+
+export interface ApiKeyModel {
+  uuid?: string
+  key?: string
+  user?: User
+  userId?: string
+}
 
 @Table({
   timestamps: true,
 })
-export class ApiKey extends Model<ApiKey> {
+export class ApiKey extends Model<ApiKey> implements ApiKeyModel {
   @Unique
   @PrimaryKey
   @AllowNull(false)

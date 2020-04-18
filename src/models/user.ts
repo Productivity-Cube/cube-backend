@@ -1,5 +1,11 @@
-import { AllowNull, Column, DataType, Model, PrimaryKey, Table, Unique, HasOne } from 'sequelize-typescript'
-import { ApiKey } from './apiKey'
+import { AllowNull, Column, DataType, HasOne, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript'
+import { ApiKey, ApiKeyModel } from './apiKey'
+
+export interface UserModel {
+  uuid?: string
+  name?: string
+  apiKey?: ApiKeyModel
+}
 
 @Table({
   timestamps: true,

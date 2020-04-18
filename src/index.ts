@@ -11,6 +11,8 @@ useContainer(Container)
 new Database(DATABASE_CONNECTION_URL)
 
 const app: { listen: Function } = createExpressServer({
+  validation: true,
+  routePrefix: '/api',
   controllers: [__dirname + '/controllers/*.ts'],
   middlewares: [__dirname + '/middlewares/*.ts'],
   interceptors: [__dirname + '/interceptors/*.ts'],

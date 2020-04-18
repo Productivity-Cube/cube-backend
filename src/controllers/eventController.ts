@@ -5,7 +5,6 @@ import { UserDao } from '../dao/userDao'
 export class EventController {
   constructor (
     private readonly userDao: UserDao,
-    // private readonly apiKeyDao: ApiKeyDao,
     ) {
   }
 
