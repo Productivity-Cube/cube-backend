@@ -1,24 +1,29 @@
 import { Body, JsonController, Post } from 'routing-controllers'
 import { API } from '../publicInterfaces'
-import { User, UserModel } from '../models/user'
-import { UserDao } from '../dao/userDao'
+import { User } from '../entity/user'
+import { Service } from 'typedi'
+import { InjectRepository } from 'typeorm-typedi-extensions'
+import { UserRepository } from '../repository/userRepository'
 
+@Service()
 @JsonController()
 export class LoginController {
   constructor (
-    private readonly userDao: UserDao,
+    private userRepository: UserRepository,
   ) {
+    console.log('HEJ ', this.userRepository)
   }
 
   @Post('/login')
-  // tslint:disable-next-line:no-any
-  async index (@Body() body: API.Login.Post.Body): Promise<UserModel> {
+  async index (@Body() body: API.Login.Post.Body): Promise<User> {
     const name: string = <string> body.name
-
-    try {
-      return (await this.userDao.getByName(name))
-    } catch (error) {
-      return (await this.userDao.createUserWithKey(name))
-    }
+    console.log('HEJ ', this.userRepository, name)
+    throw new Error();
+    // console.log('TUTAJ2', this, this.userRepository, name)
+    // try {
+    //   return (await this.userRepository.getByName(name))
+    // } catch (error) {
+    //   return this.userRepository.createUserWithKey(name)
+    // }
   }
 }

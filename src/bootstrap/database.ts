@@ -1,23 +1,9 @@
-import { Sequelize } from 'sequelize-typescript'
-import { User } from '../models/user'
-import { ApiKey } from '../models/apiKey'
+import { Connection, createConnection, useContainer } from 'typeorm'
+import { ConnectionOptions } from 'typeorm/connection/ConnectionOptions'
+import { Container, Inject, Service } from 'typedi'
+import 'reflect-metadata'
 
+@Service()
 export class Database {
-  private readonly sequelize: Sequelize
 
-  constructor (connectionInfo: string) {
-    this.sequelize = new Sequelize(connectionInfo)
-    this.registerModels()
-  }
-
-  registerModels (): void {
-    this.sequelize.addModels([
-      ApiKey,
-      User,
-    ])
-  }
-
-  getConnection (): Sequelize {
-    return this.sequelize
-  }
 }

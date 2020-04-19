@@ -1,16 +1,16 @@
 import { Controller, Get } from 'routing-controllers'
-import { UserDao } from '../dao/userDao'
+import { UserRepository } from '../repository/userRepository'
 
 @Controller()
 export class EventController {
   constructor (
-    private readonly userDao: UserDao,
+    private readonly userRepository: UserRepository,
     ) {
   }
 
   @Get('/events')
   // tslint:disable-next-line:no-any
   async getAll (): Promise<any> {
-    return JSON.stringify(await this.userDao.getByName('user1'))
+    return JSON.stringify(await this.userRepository.getByName('user1'))
   }
 }

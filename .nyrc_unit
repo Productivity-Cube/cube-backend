@@ -12,10 +12,10 @@
  "exclude": [
   "src/**/*.d.ts",
   "src/**/*.spec.ts",
-  "src/controllers/errors.ts",
-  "src/index.ts",
-  "src/conf.ts",
-  "src/services/elasticsearch/index.ts"
+  "src/errors/*.ts",
+  "src/config.ts",
+  "src/publicInterfaces.ts",
+  "src/index.ts"
  ],
  "extension": [
    ".ts",

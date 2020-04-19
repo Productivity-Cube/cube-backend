@@ -1,14 +1,18 @@
 // tslint:disable:no-import-side-effect prefer-template
 import 'reflect-metadata'
-import { createExpressServer, useContainer } from 'routing-controllers'
+import { createExpressServer } from 'routing-controllers'
 import { Container } from 'typedi'
-import { Database } from './bootstrap/database'
-import { DATABASE_CONNECTION_URL } from './config'
+import { createConnection, useContainer } from 'typeorm'
 
 useContainer(Container)
-
-// tslint:disable-next-line:no-unused-expression
-new Database(DATABASE_CONNECTION_URL)
+createConnection({
+  'type': 'mysql',
+  'host': 'localhost',
+  'port': 3306,
+  'username': 'root',
+  'password': 'root',
+  'database': 'cube'
+})
 
 const app: { listen: Function } = createExpressServer({
   validation: true,

@@ -11,6 +11,8 @@
     "build:lib": "tsc --declaration",
     "test:integration": "nyc --nycrc-path .nyrc_integration npm run test:cmd -- \"tests/e2e/**/*_test.ts\"",
     "test:unit": "npm run test:cmd -- \"src/**/*.spec.ts\"",
+    "test": "nyc --nycrc-path .nyrc_unit npm run test:unit",
+    "test:cmd": "mocha --require source-map-support/register --require ts-node/register --full-trace --exit --timeout 50000",
     "lint": "tslint -p tsconfig-lint.json \"src/**/*.ts\"  \"tests/**/*.ts\"",
     "sequelize": "sequelize $1",
     "sequelize:migrate": "sequelize db:migrate",
@@ -27,6 +29,8 @@
   },
   "homepage": "https://github.com/Productivity-Cube/cube-backend#readme",
   "devDependencies": {
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^7.0.2",
     "chai": "^4.2.0",
     "chai-exclude": "^2.0.2",
     "dirty-chai": "^2.0.1",
@@ -46,7 +50,6 @@
   "dependencies": {
     "@types/bluebird": "^3.5.30",
     "@types/body-parser": "^1.19.0",
-    "@types/chai": "^4.2.11",
     "@types/chai-as-promised": "^7.1.2",
     "@types/express": "^4.17.6",
     "@types/lodash": "^4.14.150",
@@ -80,6 +83,8 @@
     "tslint-plugin-ikatyang": "^1.1.1",
     "tslint-sonarts": "^1.9.0",
     "typedi": "^0.8.0",
+    "typeorm": "^0.2.24",
+    "typeorm-typedi-extensions": "^0.2.3",
     "uuid": "^7.0.3",
     "uuid-apikey": "^1.4.6"
   },
