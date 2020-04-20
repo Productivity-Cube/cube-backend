@@ -11,6 +11,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: cube
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       matrix:
         node-version: [13.x]
@@ -29,6 +38,7 @@ jobs:
           npm uninstall tslint --no-save
       - name: npm install and test
         run: |
+          cp .env.example .env
           npm install
           npm update
           npm run build:ci

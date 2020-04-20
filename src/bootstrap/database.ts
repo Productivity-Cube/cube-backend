@@ -16,8 +16,4 @@ export class Database {
       User,
     ])
   }
-
-  getConnection (): Sequelize {
-    return this.sequelize
-  }
 }

@@ -7,7 +7,7 @@ import { User } from '../../../src/models/user'
 import { ApiKeyDao } from '../../../src/dao/apiKeyDao'
 import { ModelMock } from '../../mocks/Model'
 import { UserNotFoundError } from '../../../src/errors/apiErrors'
-// tslint:disable:typedef newline-per-chained-call no-unused no-unused-expression no-null-keyword
+// tslint:disable:typedef newline-per-chained-call no-unused no-unused-expression no-null-keyword max-func-body-length
 
 describe('#UserDao', () => {
   const createForUserStub: SinonStub = sinon.stub().resolves(new ModelMock(apiKeyMock))

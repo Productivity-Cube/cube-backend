@@ -1,6 +1,5 @@
 import { Body, JsonController, Post } from 'routing-controllers'
 import { API } from '../publicInterfaces'
-import { UserModel } from '../models/user'
 import { UserDao } from '../dao/userDao'
 
 @JsonController()
@@ -11,7 +10,7 @@ export class LoginController {
   }
 
   @Post('/login')
-  async index (@Body() body: API.Login.Post.Body): Promise<UserModel> {
+  async index (@Body() body: API.Login.Post.Body): Promise<API.Login.Post.Response> {
     const name: string = <string> body.name
 
     try {
