@@ -15,7 +15,6 @@
     "paths": {
       "*": [
         "src/types/*",
-        "node_modules/micro-kit-atlas/types/*",
         "node_modules/*"
       ]
     }
@@ -27,9 +26,7 @@
     "src/**/*.spec.ts"
   ],
   "typeRoots": [
-    "node_modules/@types",
-    "node_modules/micro-kit-atlas/types",
-    "src/types"
+    "node_modules/@types"
   ],
   "noUnusedParameters": true
 }

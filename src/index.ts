@@ -1,13 +1,19 @@
-import "reflect-metadata"; // this shim is required
-import {createExpressServer} from "routing-controllers";
+// tslint:disable:no-import-side-effect prefer-template
+import 'reflect-metadata'
+import { createExpressServer, useContainer } from 'routing-controllers'
+import { Container } from 'typedi'
+import { Database } from './bootstrap/database'
+import { DATABASE_CONNECTION_URL } from './config'
 
-import {EventController} from "./controllers/EventController";
+useContainer(Container)
 
-// creates express app, registers all controller routes and returns you express app instance
-const app = createExpressServer({
-  controllers: [
-    EventController,
-  ]
-});
+// tslint:disable-next-line:no-unused-expression
+new Database(DATABASE_CONNECTION_URL)
 
-app.listen(8000);
+const app: { listen: Function } = createExpressServer({
+  controllers: [__dirname + '/controllers/*.ts'],
+  middlewares: [__dirname + '/middlewares/*.ts'],
+  interceptors: [__dirname + '/interceptors/*.ts'],
+})
+
+app.listen(8000)
