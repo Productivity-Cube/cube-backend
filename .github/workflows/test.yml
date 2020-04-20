@@ -30,9 +30,9 @@ jobs:
       - name: Set up MySQL 5.7
           uses: mirromutth/mysql-action@master
           with:
-            mysql version: 5.7
-            mysql database: cube
-            mysql root password: root
+            mysql_version: 5.7
+            mysql_database: cube
+            mysql_root_password: root
       - name: Use node version ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
