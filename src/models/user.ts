@@ -1,4 +1,5 @@
-import { AllowNull, Column, DataType, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript'
+import { AllowNull, Column, DataType, Model, PrimaryKey, Table, Unique, HasOne } from 'sequelize-typescript'
+import { ApiKey } from './apiKey'
 
 @Table({
   timestamps: true,
@@ -14,4 +15,8 @@ export class User extends Model<User> {
   @AllowNull(false)
   @Column(DataType.STRING)
   public name?: string
+
+  // tslint:disable-next-line:typedef
+  @HasOne(() => ApiKey)
+  public apiKey?: ApiKey
 }
