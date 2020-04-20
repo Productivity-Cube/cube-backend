@@ -1,16 +1,10 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - master
-      - release-*
-      - PC-*
   pull_request:
     branches:
       - master
       - release-*
-      - PC-*
 
 jobs:
   build:
