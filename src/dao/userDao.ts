@@ -36,7 +36,6 @@ export class UserDao {
     })
 
     if (_.isNull(user)) {
-      // return {}
       throw new UserNotFoundError()
     }
 

@@ -6,7 +6,7 @@ import { User } from '../models/user'
 
 @Service()
 export class ApiKeyDao {
-  public createForUser (user: User): Promise<ApiKey> {
+  public async createForUser (user: User): Promise<ApiKey> {
     return ApiKey.create({
       ...this.generateApiKeyObject(),
       userId: user.uuid,
@@ -16,7 +16,9 @@ export class ApiKeyDao {
   private generateApiKeyObject (): ApiKeyModel {
     return {
       uuid: uuid.v4(),
-      key: crypto.randomBytes(48).toString('hex')
+      key: crypto
+        .randomBytes(48)
+        .toString('hex')
     }
   }
 }
