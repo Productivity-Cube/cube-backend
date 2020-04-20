@@ -5,7 +5,7 @@ import { Response } from 'express'
 export class StatusController {
 
   @Get('/')
-  async get (@Res() response: Response): Promise<Response> {
+  async index (@Res() response: Response): Promise<Response> {
     return response.send('ok')
   }
 }

@@ -8,3 +8,5 @@ chai.use(asPromised)
 
 export { sinon as sinon }
 export const expect: Chai.ExpectStatic = chai.expect
+
+process.env.DATABASE_CONNECTION_URL = 'Unit tests should not connect to the DB'
