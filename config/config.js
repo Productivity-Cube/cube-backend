@@ -1,3 +1,4 @@
+require('dotenv').config();
 const fs = require('fs');
 
 module.exports = {
@@ -6,18 +7,18 @@ module.exports = {
     password: 'root',
     database: 'cube',
     host: '127.0.0.1',
-    port: 32574,
+    port: 3306,
     dialect: 'mysql',
     dialectOptions: {
       bigNumberStrings: true
     }
   },
   test: {
-    username: process.env.CI_DB_USERNAME,
-    password: process.env.CI_DB_PASSWORD,
-    database: process.env.CI_DB_NAME,
+    username: 'root',
+    password: 'root',
+    database: 'cube',
     host: '127.0.0.1',
-    port: 3306,
+    port: 32574,
     dialect: 'mysql',
     dialectOptions: {
       bigNumberStrings: true
