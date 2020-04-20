@@ -6,6 +6,8 @@ export class Database {
   private readonly sequelize: Sequelize
 
   constructor (connectionInfo: string) {
+    // tslint:disable-next-line:no-console
+    console.log(connectionInfo);
     this.sequelize = new Sequelize(connectionInfo)
     this.registerModels()
   }
