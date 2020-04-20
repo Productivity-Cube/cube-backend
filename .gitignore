@@ -64,5 +64,4 @@ _keys/
 # docker-compose.yml file
 docker-compose.yml
 # sequelize config
-config/
 ./models/
