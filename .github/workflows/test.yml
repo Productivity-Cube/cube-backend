@@ -8,8 +8,12 @@ on:
       -
 
 jobs:
-  test-host:
+  build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [13.x]
     services:
       mysql:
         image: mysql:5.7
@@ -18,18 +22,6 @@ jobs:
         ports:
           - 32574:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-    steps:
-      - name: Verify MySQL connection from host
-        run: |
-          sudo apt-get install -y mysql-client
-          mysql --host 127.0.0.1 --port 32574 -uroot -ppassword -e "SHOW DATABASES"
-  build:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [13.x]
-
     steps:
       - uses: actions/checkout@v1
         with:
@@ -43,7 +35,10 @@ jobs:
           npm uninstall typescript --no-save
           npm uninstall tslint --no-save
       - name: Create DB
-        run: mysql -uroot -proot -e "CREATE DATABASE cube;"
+        run: |
+          sudo apt-get install -y mysql-client
+          mysql --host 127.0.0.1 --port 32574 -uroot -ppassword -e "CREATE DATABASE cube;"
+          mysql --host 127.0.0.1 --port 32574 -uroot -ppassword -e "SHOW DATABASES"
       - name: npm install and test
         run: |
           cp .env.example .env
