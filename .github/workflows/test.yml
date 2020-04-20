@@ -27,6 +27,12 @@ jobs:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 5
+      - name: Set up MySQL 5.7
+          uses: mirromutth/mysql-action@master
+          with:
+            mysql version: 5.7
+            mysql database: cube
+            mysql root password: root
       - name: Use node version ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -36,9 +42,8 @@ jobs:
           npm uninstall typescript --no-save
           npm uninstall tslint --no-save
       - name: npm install and test
-        env:
-          DB_PORT: ${{ "mysql://root:root@127.0.0.1"~ job.services.mysql.ports[3306] ~"/cube" }}
         run: |
+          cp .env.example .env
           npm install
           npm update
           npm run build:ci
