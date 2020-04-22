@@ -3,6 +3,9 @@ import { UserModel } from './models/user'
 import { EventModel } from './models/event'
 
 export namespace API {
+  export interface Error {
+    name: string
+  }
   export interface ValidationErrorResponse {
     name: string
     message: string
@@ -16,7 +19,7 @@ export namespace API {
       }
     }
   }
-  export namespace Event {
+  export namespace Events {
     export namespace Post {
       export class Body {
         @IsNotEmpty()
