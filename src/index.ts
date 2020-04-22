@@ -5,15 +5,21 @@ import { Container } from 'typedi'
 import { Database } from './bootstrap/database'
 import { DATABASE_CONNECTION_URL } from './config'
 
-useContainer(Container)
+export function initService (): Object {
+  useContainer(Container)
 
-// tslint:disable-next-line:no-unused-expression
-new Database(DATABASE_CONNECTION_URL)
+  // tslint:disable-next-line:no-unused-expression
+  new Database(DATABASE_CONNECTION_URL)
 
-const app: { listen: Function } = createExpressServer({
-  controllers: [__dirname + '/controllers/*.ts'],
-  middlewares: [__dirname + '/middlewares/*.ts'],
-  interceptors: [__dirname + '/interceptors/*.ts'],
-})
+  const app: { listen: Function } = createExpressServer({
+    validation: true,
+    routePrefix: '/api',
+    controllers: [__dirname + '/controllers/*.ts'],
+    middlewares: [__dirname + '/middlewares/*.ts'],
+    interceptors: [__dirname + '/interceptors/*.ts'],
+  })
 
-app.listen(8000)
+  app.listen(8000)
+
+  return app
+}

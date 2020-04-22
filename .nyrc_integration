@@ -10,14 +10,6 @@
    "src/**/*.tsx"
  ],
  "exclude": [
-  "src/**/*.d.ts",
-  "src/**/*.spec.ts",
-  "src/errors/*.ts",
-  "src/models/*.ts",
-  "src/bootstrap/database.ts",
-  "src/config.ts",
-  "src/publicInterfaces.ts",
-  "src/index.ts"
  ],
  "extension": [
    ".ts",
@@ -32,5 +24,6 @@
  ],
  "sourceMap": true,
  "instrument": true,
+ "report-dir": "./coverage_e2e",
  "all": true
 }

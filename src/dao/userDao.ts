@@ -1,19 +1,44 @@
-import { User } from '../models/user'
-import { Database } from '../bootstrap/database'
-import { ApiKey } from '../models/apiKey'
+import { User, UserModel } from '../models/user'
+import * as _ from 'lodash'
+import { UserNotFoundError } from '../errors/apiErrors'
+import * as uuid from 'uuid'
+import { ApiKeyDao } from './apiKeyDao'
+import { Inject, Service } from 'typedi'
 
+@Service()
 export class UserDao {
-  constructor (private readonly database: Database) {
+  @Inject()
+  private readonly apiKeyDao: ApiKeyDao
+
+  constructor (
+    apiKeyDao: ApiKeyDao
+  ) {
+    this.apiKeyDao = apiKeyDao
   }
 
-  async getByName (name: string): Promise<User | null> {
-    return User.findOne({
+  public async createUserWithKey (name: string): Promise<UserModel> {
+    const user: User = await User.create({
+      uuid: uuid.v4(),
+      name,
+    })
+
+    return {
+      ...user.toJSON(),
+      apiKey: (await this.apiKeyDao.createForUser(user)).toJSON(),
+    }
+  }
+
+  public async getByName (name: string): Promise<UserModel> {
+    const user: User | null = await User.findOne({
       where: {
         name,
-      },
-      include: [{
-        model: ApiKey,
-      }]
+      }
     })
+
+    if (_.isNull(user)) {
+      throw new UserNotFoundError()
+    }
+
+    return user.toJSON()
   }
 }

@@ -1,11 +1,13 @@
-import { Controller, Get, Res } from 'routing-controllers'
-import { Response } from 'express'
+import { Get, JsonController } from 'routing-controllers'
+import { API } from '../publicInterfaces'
 
-@Controller()
+@JsonController()
 export class StatusController {
 
   @Get('/')
-  async get (@Res() response: Response): Promise<Response> {
-    return response.send('ok')
+  async index (): Promise<API.Status.Get.Response> {
+    return {
+      status: 'ok'
+    }
   }
 }
