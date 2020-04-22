@@ -4,6 +4,7 @@ import { createExpressServer, useContainer } from 'routing-controllers'
 import { Container } from 'typedi'
 import { Database } from './bootstrap/database'
 import { DATABASE_CONNECTION_URL } from './config'
+import * as cors from 'cors'
 
 export function initService (): Object {
   useContainer(Container)
@@ -11,7 +12,8 @@ export function initService (): Object {
   // tslint:disable-next-line:no-unused-expression
   new Database(DATABASE_CONNECTION_URL)
 
-  const app: { listen: Function } = createExpressServer({
+  const app: { listen: Function; options: Function } = createExpressServer({
+    cors: true,
     validation: true,
     routePrefix: '/api',
     controllers: [__dirname + '/controllers/*.ts'],
@@ -19,7 +21,11 @@ export function initService (): Object {
     interceptors: [__dirname + '/interceptors/*.ts'],
   })
 
+  //app.options(false, cors())
+
   app.listen(8000)
 
   return app
 }
+
+initService()
