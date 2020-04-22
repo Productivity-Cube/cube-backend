@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsString, MinLength, ValidationError } from 'class-validator'
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, MinLength, ValidationError } from 'class-validator'
 import { UserModel } from './models/user'
+import { EventModel } from './models/event'
 
 export namespace API {
   export interface ValidationErrorResponse {
@@ -13,6 +14,28 @@ export namespace API {
       export interface Response {
         status: string
       }
+    }
+  }
+  export namespace Event {
+    export namespace Post {
+      export class Body {
+        @IsNotEmpty()
+        @IsString()
+        @MinLength(3)
+        user: string = ''
+
+        @IsNotEmpty()
+        @IsString()
+        @MinLength(3)
+        activity: string = ''
+
+        @IsNumber()
+        @Min(1)
+        @Max(3)
+        @IsOptional()
+        productivityRate?: number
+      }
+      export type Response = EventModel
     }
   }
   export namespace Login {

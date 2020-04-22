@@ -32,11 +32,6 @@ export class Event extends Model<Event> implements EventModel {
   @Column(DataType.STRING)
   public uuid?: string
 
-  @Unique
-  @AllowNull(false)
-  @Column(DataType.STRING)
-  public key?: string
-
   // tslint:disable-next-line:typedef
   @BelongsTo(() => User)
   public user?: User
@@ -47,11 +42,11 @@ export class Event extends Model<Event> implements EventModel {
   public userId?: string
 
   // tslint:disable-next-line:typedef
-  @BelongsTo(() => User)
+  @BelongsTo(() => Activity)
   public activity?: Activity
 
   // tslint:disable-next-line:typedef
-  @ForeignKey(() => User)
+  @ForeignKey(() => Activity)
   @Column
   public activityId?: string
 

@@ -1,5 +1,6 @@
-import { AllowNull, Column, DataType, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript'
+import { AllowNull, Column, DataType, HasMany, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript'
 import { ApiKeyModel } from './apiKey'
+import { Event } from './event'
 
 export interface ActivityModel {
   uuid?: string
@@ -9,6 +10,7 @@ export interface ActivityModel {
 
 @Table({
   tableName: 'Activities',
+  timestamps: false,
 })
 export class Activity extends Model<Activity> {
   @Unique
@@ -21,4 +23,8 @@ export class Activity extends Model<Activity> {
   @AllowNull(false)
   @Column(DataType.STRING)
   public name?: string
+
+  // tslint:disable-next-line:typedef
+  @HasMany(() => Event)
+  public events?: Event
 }
