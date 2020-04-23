@@ -1,11 +1,23 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, MinLength, ValidationError } from 'class-validator'
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+  MinLength,
+  ValidationError
+} from 'class-validator'
 import { UserModel } from './models/user'
 import { EventModel } from './models/event'
 
+// tslint:disable:max-classes-per-file
 export namespace API {
   export interface Error {
     name: string
   }
+
   export interface ValidationErrorResponse {
     name: string
     message: string
@@ -20,6 +32,51 @@ export namespace API {
     }
   }
   export namespace Events {
+    export namespace Get {
+      export enum GroupByOptions {
+        activity = 'activity',
+        day = 'day',
+        hour = 'hour',
+      }
+
+      export class Params {
+        @IsString()
+        userName: string = ''
+      }
+
+      export class QueryParams {
+        @IsString()
+        @IsEnum(GroupByOptions)
+        @IsOptional()
+        groupBy?: GroupByOptions
+
+        @IsString()
+        @IsOptional()
+        activity?: string
+
+        @IsString()
+        @IsOptional()
+        dateFrom?: string
+
+        @IsString()
+        @IsOptional()
+        dateTo?: string
+      }
+
+      export type Response = EventModel[]
+
+      export namespace GroupBy {
+        export type QueryParams = API.Events.Get.QueryParams
+        export interface Response {
+          [key: string]: EventModel[]
+        }
+
+        export class Params extends API.Events.Get.Params {
+          @IsString()
+          groupBy: string = ''
+        }
+      }
+    }
     export namespace Post {
       export class Body {
         @IsNotEmpty()
@@ -38,6 +95,7 @@ export namespace API {
         @IsOptional()
         productivityRate?: number
       }
+
       export type Response = EventModel
     }
   }

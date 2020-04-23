@@ -1,17 +1,14 @@
 import { expect, sinon } from '../setup'
 import { SinonStub } from 'sinon'
 import { ActivityDao } from '../../../src/dao/activityDao'
-import { Activity } from '../../../src/models/activity'
 import { activityMock } from '../../mocks/Activity'
 import { ModelMock } from '../../mocks/Model'
-import { ActivityNotFoundError } from '../../../src/errors/apiErrors'
 import { EventDao } from '../../../src/dao/eventDao'
-import { apiKeyMock } from '../../mocks/ApiKey'
-import { ApiKeyDao } from '../../../src/dao/apiKeyDao'
 import { userMock } from '../../mocks/User'
 import { UserDao } from '../../../src/dao/userDao'
 import { Event } from '../../../src/models/event'
 import { eventMock } from '../../mocks/Event'
+import * as Sequelize from 'sequelize'
 // tslint:disable:typedef newline-per-chained-call no-unused no-unused-expression no-null-keyword
 
 describe('#EventDao', () => {
@@ -40,6 +37,50 @@ describe('#EventDao', () => {
         userId: userMock.uuid,
         activityId: activityMock.uuid
       })
+    })
+  })
+
+  describe('find', () => {
+    const findAllStub: SinonStub = sinon.stub(Event, 'findAll')
+    findAllStub.resolves([new ModelMock(eventMock)])
+
+    it('Should retrieve all data for user', async () => {
+      expect(await eventDao.find('userName', {})).to.deep.equal([eventMock])
+      expect(findAllStub.lastCall.args[0].include[0].where).to.deep.equal({})
+      expect(findAllStub.lastCall.args[0].include[1].where).to.deep.equal({ name: 'userName' })
+    })
+
+    it('Should be able to filter by activity name', async () => {
+      expect(await eventDao.find('userName', {
+        activity: 'activity',
+      })).to.deep.equal([eventMock])
+      expect(findAllStub.lastCall.args[0].include[0].where).to.deep.equal({ name: 'activity' })
+      expect(findAllStub.lastCall.args[0].include[1].where).to.deep.equal({ name: 'userName' })
+    })
+
+    it('Should be able to filter by date from', async () => {
+      expect(await eventDao.find('userName', {
+        dateFrom: '12-10-2012',
+      })).to.deep.equal([eventMock])
+      expect(findAllStub.lastCall.args[0].where).to.deep.equal({
+        createdAt: {
+          [Sequelize.Op.gte]: '2012-12-09T23:00:00.000Z',
+        },
+      })
+      expect(findAllStub.lastCall.args[0].include[0].where).to.deep.equal({})
+      expect(findAllStub.lastCall.args[0].include[1].where).to.deep.equal({ name: 'userName' })
+    })
+    it('Should be able to filter by date to', async () => {
+      expect(await eventDao.find('userName', {
+        dateTo: '12-10-2012',
+      })).to.deep.equal([eventMock])
+      expect(findAllStub.lastCall.args[0].where).to.deep.equal({
+        createdAt: {
+          [Sequelize.Op.lte]: '2012-12-09T23:00:00.000Z',
+        },
+      })
+      expect(findAllStub.lastCall.args[0].include[0].where).to.deep.equal({})
+      expect(findAllStub.lastCall.args[0].include[1].where).to.deep.equal({ name: 'userName' })
     })
   })
 })
