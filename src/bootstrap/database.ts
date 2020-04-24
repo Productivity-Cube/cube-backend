@@ -1,6 +1,8 @@
 import { Sequelize } from 'sequelize-typescript'
 import { User } from '../models/user'
 import { ApiKey } from '../models/apiKey'
+import { Activity } from '../models/activity'
+import { Event } from '../models/event'
 
 export class Database {
   private readonly sequelize: Sequelize
@@ -12,7 +14,9 @@ export class Database {
 
   registerModels (): void {
     this.sequelize.addModels([
+      Activity,
       ApiKey,
+      Event,
       User,
     ])
   }

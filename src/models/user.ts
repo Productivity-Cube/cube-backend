@@ -1,5 +1,6 @@
-import { AllowNull, Column, DataType, HasOne, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript'
+import { AllowNull, Column, DataType, HasOne, Model, PrimaryKey, Table, Unique, HasMany } from 'sequelize-typescript'
 import { ApiKey, ApiKeyModel } from './apiKey'
+import { Event } from './event'
 
 export interface UserModel {
   uuid?: string
@@ -25,4 +26,8 @@ export class User extends Model<User> {
   // tslint:disable-next-line:typedef
   @HasOne(() => ApiKey)
   public apiKey?: ApiKey
+
+  // tslint:disable-next-line:typedef
+  @HasMany(() => Event)
+  public events?: Event
 }

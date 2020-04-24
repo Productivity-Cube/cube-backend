@@ -11,6 +11,7 @@ import { ApiKey } from '../../src/models/apiKey'
 // tslint:disable:no-require-imports no-var-requires
 chai.use(require('chai-json-schema'));
 chai.use(require('chai-deep-match'))
+chai.use(require('chai-exclude'))
 chai.use(sinonChai)
 chai.use(asPromised)
 

@@ -11,7 +11,9 @@ module.exports = {
     dialect: 'mysql',
     dialectOptions: {
       bigNumberStrings: true
-    }
+    },
+    seederStorage: 'sequelize',
+    seederStorageTableName: 'sequelizeSeeds'
   },
   test: {
     username: 'root',
@@ -22,7 +24,9 @@ module.exports = {
     dialect: 'mysql',
     dialectOptions: {
       bigNumberStrings: true
-    }
+    },
+    seederStorage: 'sequelize',
+    seederStorageTableName: 'sequelizeSeeds'
   },
   production: {
     username: process.env.PROD_DB_USERNAME,
@@ -33,6 +37,8 @@ module.exports = {
     dialect: 'mysql',
     dialectOptions: {
       bigNumberStrings: true,
-    }
+    },
+    seederStorage: 'sequelize',
+    seederStorageTableName: 'sequelizeSeeds'
   }
 };

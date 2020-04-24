@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Event', {
+    return queryInterface.createTable('Events', {
       uuid: {
         primaryKey: true,
         type: Sequelize.STRING(36),
@@ -28,6 +28,6 @@ module.exports = {
     })
   },
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Event');
+    return queryInterface.dropTable('Events');
   }
 };
