@@ -7,6 +7,7 @@ import { createEvent, listUserEvents, loginCall } from '../helpers/apiCalls'
 import { EventDao } from '../../../src/dao/eventDao'
 import { ActivityDao } from '../../../src/dao/activityDao'
 import { expectToBeAssignedToUser } from '../helpers/asserts'
+import { ApiKeyModel } from '../../../src/models/apiKey'
 
 describe('GET /api/user/:userName/events', () => {
   const apiKeyDao: ApiKeyDao = new ApiKeyDao()
@@ -22,14 +23,14 @@ describe('GET /api/user/:userName/events', () => {
     user = await loginCall(name, 200)
     user2 = await loginCall(name2, 200)
 
-    await createEvent(name, 'Call')
-    await createEvent(name, 'Call')
-    await createEvent(name, 'Call')
-    await createEvent(name, 'Break')
-    await createEvent(name, 'Break')
-    await createEvent(name, 'Planning')
-    await createEvent(name2, 'Planning')
-    await createEvent(name2, 'Call')
+    await createEvent(<ApiKeyModel> user.apiKey, name, 'Call')
+    await createEvent(<ApiKeyModel> user.apiKey, name, 'Call')
+    await createEvent(<ApiKeyModel> user.apiKey, name, 'Call')
+    await createEvent(<ApiKeyModel> user.apiKey, name, 'Break')
+    await createEvent(<ApiKeyModel> user.apiKey, name, 'Break')
+    await createEvent(<ApiKeyModel> user.apiKey, name, 'Planning')
+    await createEvent(<ApiKeyModel> user2.apiKey, name2, 'Planning')
+    await createEvent(<ApiKeyModel> user2.apiKey, name2, 'Call')
   })
   it('Should retrieve unfiltered user events ', async () => {
     const events: API.Events.Get.Response = await listUserEvents(name, {})

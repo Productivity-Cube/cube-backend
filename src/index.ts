@@ -1,12 +1,15 @@
 // tslint:disable:no-import-side-effect prefer-template
 import 'reflect-metadata'
-import { createExpressServer, useContainer } from 'routing-controllers'
+import { createExpressServer, useContainer, Action } from 'routing-controllers'
 import { Container } from 'typedi'
 import { Database } from './bootstrap/database'
 import { DATABASE_CONNECTION_URL } from './config'
 import * as cors from 'cors'
+import { ApiKeyDao } from './dao/apiKeyDao'
+import { ApiKeyModel } from './models/apiKey'
+import { UserModel } from './models/user'
 
-let app: { listen: Function; options: Function }
+let app: { listen: Function; options: Function, use: Function }
 
 export function initService (): Object {
   if (app !== undefined) {
@@ -19,6 +22,21 @@ export function initService (): Object {
   new Database(DATABASE_CONNECTION_URL)
 
   app = createExpressServer({
+    authorizationChecker: async (action: Action): Promise<boolean> => {
+      const token: string = action.request.headers.authorization?.substr(7)
+
+      try {
+        const apiKey: ApiKeyModel = await (new ApiKeyDao()).findByKey(token)
+        if ((<UserModel> apiKey.user).name !== action.request.body.user) {
+          return false
+        }
+      } catch (error) {
+        return false
+      }
+
+      return true
+    },
+    defaultErrorHandler: false,
     cors: true,
     validation: true,
     routePrefix: '/api',

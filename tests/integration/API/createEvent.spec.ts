@@ -10,6 +10,7 @@ import { ActivityDao } from '../../../src/dao/activityDao'
 import { EventModel } from '../../../src/models/event'
 import { expectWithoutDates } from '../helpers/asserts'
 import { ActivityModel } from '../../../src/models/activity'
+import { ApiKeyModel } from '../../../src/models/apiKey'
 
 describe('POST /api/events', () => {
   const apiKeyDao: ApiKeyDao = new ApiKeyDao()
@@ -26,7 +27,7 @@ describe('POST /api/events', () => {
     activity = await activityDao.getByName(activityName)
   })
   it('When user tries to login for first time it should return newly created user with api key', async () => {
-    const event: API.Events.Post.Response = await createEvent(name, activityName)
+    const event: API.Events.Post.Response = await createEvent(<ApiKeyModel> user.apiKey, name, activityName)
 
     expectWithoutDates(<UserModel> event.user, user)
     expectWithoutDates(<ActivityModel> event.activity, activity)
@@ -34,13 +35,39 @@ describe('POST /api/events', () => {
   })
 
   it('When activity is not found it should throw an error', async () => {
-    const event: API.Error = <API.Error> await createEvent(name, 'wrong activity', undefined, 500)
+    const event: API.Error = <API.Error> await createEvent(
+      <ApiKeyModel> user.apiKey,
+      name,
+      'wrong activity',
+      undefined,
+      404)
 
     expect(event.name).to.equal('ActivityNotFoundError')
   })
-  it('When user is not found it should throw an error', async () => {
-    const event: API.Error = <API.Error> await createEvent('wrong name', activityName, undefined, 500)
-
-    expect(event.name).to.equal('UserNotFoundError')
+  it('Should throw unauthorized error when user is not found', async () => {
+    const event: API.Error = <API.Error> await createEvent(
+      <ApiKeyModel> user.apiKey,
+      'wrong name',
+      activityName,
+      undefined,
+      401)
+  })
+  it('Should throw unauthorized error when key is wrong', async () => {
+    const event: API.Error = <API.Error> await createEvent(
+      { ...user.apiKey, key: 'wrong key' },
+      name,
+      activityName,
+      undefined,
+      401)
+  })
+  it('Should throw unauthorized error when header bearer is not sent', async () => {
+    const response: { body: Object } = await request
+      .post('/api/events')
+      .set('Accept', 'application/json')
+      .send({
+        activity,
+        user,
+      })
+      .expect(401)
   })
 })

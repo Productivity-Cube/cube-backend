@@ -1,5 +1,6 @@
 import { request } from '../setup'
 import { API } from '../../../src/publicInterfaces'
+import { ApiKeyModel } from '../../../src/models/apiKey'
 
 // tslint:disable:no-backbone-get-set-outside-model no-duplicate-string
 
@@ -22,7 +23,9 @@ export async function statusCall (): Promise<API.Status.Get.Response> {
   return <API.Status.Get.Response> response.body
 }
 
+// tslint:disable-next-line:max-func-args
 export async function createEvent<T> (
+  apiKey: ApiKeyModel,
   user: string,
   activity: string,
   productivityRate?: number,
@@ -30,13 +33,14 @@ export async function createEvent<T> (
 ): Promise<API.Events.Post.Response | T> {
   const response: { body: Object } = await request
     .post('/api/events')
+    .set('Accept', 'application/json')
+    .set({ Authorization: `Bearer:${apiKey.key}` })
     .send({
       activity,
       user,
       productivityRate,
     })
     .expect(status)
-    .set('Accept', 'application/json')
 
   return response.body
 }
