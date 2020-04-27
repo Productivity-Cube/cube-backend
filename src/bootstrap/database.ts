@@ -9,7 +9,7 @@ export class Database {
 
   constructor (connectionInfo: string) {
     this.sequelize = new Sequelize(connectionInfo, {
-      logging: false
+      logging: true
     })
     this.registerModels()
   }
