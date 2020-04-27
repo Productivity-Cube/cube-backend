@@ -59,6 +59,7 @@ export async function listUserEvents<T> (
   return <API.Events.Get.Response | T> response.body
 }
 
+// tslint:disable-next-line:max-func-args
 export async function listUserEventsGroupBy<T> (
   userName: string,
   groupBy: string,

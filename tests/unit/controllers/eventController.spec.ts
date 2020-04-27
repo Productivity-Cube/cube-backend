@@ -5,7 +5,7 @@ import { EventController } from '../../../src/controllers/eventController'
 import { eventMock } from '../../mocks/Event'
 
 // tslint:disable:typedef newline-per-chained-call no-unused no-unused-expression no-duplicate-string
-
+// tslint:disable-next-line:max-func-body-length
 describe('#eventController', () => {
   const createStub: SinonStub = sinon.stub().resolves('createStub')
   const findStub: SinonStub = sinon.stub().resolves('findStub')

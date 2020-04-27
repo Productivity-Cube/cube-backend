@@ -14,12 +14,13 @@ import { Activity } from './activity'
 
 export interface EventModel {
   uuid?: string
-  key?: string
   user?: User
   userId?: string
   activity?: User
   activityId?: string
   productivityRate?: number
+  time?: number
+  createdAt?: Date | string
 }
 
 @Table({
@@ -53,4 +54,9 @@ export class Event extends Model<Event> implements EventModel {
   @AllowNull(true)
   @Column
   public productivityRate?: number
+
+  @Column
+  public time?: number
+
+  createdAt?: Date | string
 }

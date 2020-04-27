@@ -9,7 +9,9 @@ import { UserDao } from '../../../src/dao/userDao'
 import { Event } from '../../../src/models/event'
 import { eventMock } from '../../mocks/Event'
 import * as Sequelize from 'sequelize'
-// tslint:disable:typedef newline-per-chained-call no-unused no-unused-expression no-null-keyword
+import { API } from '../../../src/publicInterfaces'
+import GroupByOptions = API.Events.Get.GroupByOptions
+// tslint:disable:typedef newline-per-chained-call no-unused no-unused-expression no-null-keyword max-func-body-length no-big-function
 
 describe('#EventDao', () => {
   const activityGetByNameStub: SinonStub = sinon.stub().resolves(activityMock)
@@ -38,6 +40,33 @@ describe('#EventDao', () => {
         activityId: activityMock.uuid
       })
     })
+    it('Should save event for the user and activity with productivity rate', async () => {
+      createStub.resolves(new ModelMock(eventMock))
+      findOneStub.resolves(new ModelMock(eventMock))
+      expect(await eventDao.create('userName', 'Call', 1)).to.equal(eventMock)
+      expect(createStub).to.be.calledWith({
+        uuid: sinon.match.any,
+        name: 'userName',
+        productivityRate: 1,
+        userId: userMock.uuid,
+        activityId: activityMock.uuid
+      })
+    })
+
+    it('Should not throw error if this is a first saved record', async () => {
+      findOneStub.reset()
+      createStub.resolves(new ModelMock(eventMock))
+      findOneStub.onCall(0).resolves(null)
+      findOneStub.onCall(1).resolves(new ModelMock(eventMock))
+      expect(await eventDao.create('userName', 'Call')).to.equal(eventMock)
+      expect(createStub).to.be.calledWith({
+        uuid: sinon.match.any,
+        name: 'userName',
+        productivityRate: undefined,
+        userId: userMock.uuid,
+        activityId: activityMock.uuid
+      })
+    })
   })
 
   describe('find', () => {
@@ -56,6 +85,18 @@ describe('#EventDao', () => {
       })).to.deep.equal([eventMock])
       expect(findAllStub.lastCall.args[0].include[0].where).to.deep.equal({ name: 'activity' })
       expect(findAllStub.lastCall.args[0].include[1].where).to.deep.equal({ name: 'userName' })
+    })
+
+    it('Should be able to filter by productivity rate', async () => {
+      expect(await eventDao.find('userName', {
+        productivityRate: '1',
+      })).to.deep.equal([eventMock])
+    })
+
+    it('Should be able to group by parameter', async () => {
+      expect(await eventDao.find('userName', {
+        groupBy: GroupByOptions.activityId,
+      })).to.deep.equal([eventMock])
     })
 
     it('Should be able to filter by date from', async () => {

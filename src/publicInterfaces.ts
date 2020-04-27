@@ -12,7 +12,7 @@ import {
 import { UserModel } from './models/user'
 import { EventModel } from './models/event'
 
-// tslint:disable:max-classes-per-file
+// tslint:disable:max-classes-per-file no-shadowed-variable no-unnecessary-qualifier
 export namespace API {
   export interface Error {
     name: string
@@ -34,7 +34,8 @@ export namespace API {
   export namespace Events {
     export namespace Get {
       export enum GroupByOptions {
-        activity = 'activity',
+        activityId = 'activityId',
+        productivityRate = 'productivityRate',
         day = 'day',
         hour = 'hour',
       }
@@ -53,6 +54,9 @@ export namespace API {
         @IsString()
         @IsOptional()
         activity?: string
+
+        @IsOptional()
+        productivityRate?: string | number
 
         @IsString()
         @IsOptional()

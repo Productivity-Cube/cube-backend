@@ -1,22 +1,16 @@
 // tslint:disable:typedef newline-per-chained-call no-unused no-unused-expression no-backbone-get-set-outside-model
-import { expect, request, sinon } from '../setup'
+import { expect, request } from '../setup'
 import { API } from '../../../src/publicInterfaces'
-import { UserDao } from '../../../src/dao/userDao'
-import { ApiKeyDao } from '../../../src/dao/apiKeyDao'
 import { UserModel } from '../../../src/models/user'
 import { createEvent, loginCall } from '../helpers/apiCalls'
-import { EventDao } from '../../../src/dao/eventDao'
 import { ActivityDao } from '../../../src/dao/activityDao'
-import { EventModel } from '../../../src/models/event'
 import { expectWithoutDates } from '../helpers/asserts'
 import { ActivityModel } from '../../../src/models/activity'
 import { ApiKeyModel } from '../../../src/models/apiKey'
 
+// tslint:disable-next-line:max-func-body-length
 describe('POST /api/events', () => {
-  const apiKeyDao: ApiKeyDao = new ApiKeyDao()
   const activityDao: ActivityDao = new ActivityDao()
-  const userDao: UserDao = new UserDao(apiKeyDao)
-  const eventDao: EventDao = new EventDao(activityDao, userDao)
   const name: string = 'Wojciech'
   const activityName: string = 'Call'
 
@@ -45,7 +39,7 @@ describe('POST /api/events', () => {
     expect(event.name).to.equal('ActivityNotFoundError')
   })
   it('Should throw unauthorized error when user is not found', async () => {
-    const event: API.Error = <API.Error> await createEvent(
+    await createEvent(
       <ApiKeyModel> user.apiKey,
       'wrong name',
       activityName,
@@ -53,7 +47,7 @@ describe('POST /api/events', () => {
       401)
   })
   it('Should throw unauthorized error when key is wrong', async () => {
-    const event: API.Error = <API.Error> await createEvent(
+    await createEvent(
       { ...user.apiKey, key: 'wrong key' },
       name,
       activityName,
@@ -61,7 +55,7 @@ describe('POST /api/events', () => {
       401)
   })
   it('Should throw unauthorized error when header bearer is not sent', async () => {
-    const response: { body: Object } = await request
+    await request
       .post('/api/events')
       .set('Accept', 'application/json')
       .send({

@@ -5,4 +5,8 @@ export class ModelMock {
   public toJSON (): Object {
     return this.data
   }
+
+  public save (): Object {
+    return this.data
+  }
 }

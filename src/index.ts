@@ -1,6 +1,6 @@
 // tslint:disable:no-import-side-effect prefer-template
 import 'reflect-metadata'
-import { createExpressServer, useContainer, Action } from 'routing-controllers'
+import { Action, createExpressServer, useContainer } from 'routing-controllers'
 import { Container } from 'typedi'
 import { Database } from './bootstrap/database'
 import { DATABASE_CONNECTION_URL } from './config'
@@ -8,11 +8,12 @@ import * as cors from 'cors'
 import { ApiKeyDao } from './dao/apiKeyDao'
 import { ApiKeyModel } from './models/apiKey'
 import { UserModel } from './models/user'
+import * as _ from 'lodash'
 
-let app: { listen: Function; options: Function, use: Function }
+let app: { listen: Function; options: Function; use: Function }
 
 export function initService (): Object {
-  if (app !== undefined) {
+  if (!_.isUndefined(app)) {
     return app
   }
 

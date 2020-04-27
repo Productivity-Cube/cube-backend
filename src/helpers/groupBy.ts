@@ -10,6 +10,7 @@ const groupBy = (key: string) => (array: Object[]) =>
   }, {})
 
 export function groupByField<T> (field: string, arrayToGroup: T[]): { [key: string]: T[] } {
+  // tslint:disable-next-line:no-shadowed-variable
   const groupByField: Function = groupBy(field)
 
   return groupByField(arrayToGroup)

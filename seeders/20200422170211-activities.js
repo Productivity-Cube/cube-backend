@@ -21,6 +21,10 @@ module.exports = {
         uuid: 'db883dad-27b4-475d-a28c-4e3351598597',
         name: 'Planning',
       },
+      {
+        uuid: 'c1b218d7-611a-4ebf-b725-25e52374c040',
+        name: 'Off',
+      },
     ]);
   },
   down: (queryInterface, Sequelize) => {

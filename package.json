@@ -7,7 +7,7 @@
     "start": "node ./dist/index.js",
     "start-dev-watch": "ts-node-dev --respawn --transpileOnly ./src/index.ts",
     "start-dev": "ts-node ./src/index.ts",
-    "build:ci": "npm build && npm run sequelize:migrate && npm run sequelize:seed && npm run test",
+    "build:ci": "npm build && npm run lint && npm run sequelize:migrate && npm run sequelize:seed && npm run test",
     "build": "npm run lint && npm run build:clean && npm run build:lib",
     "build:clean": "rimraf dist",
     "build:lib": "tsc --declaration",
