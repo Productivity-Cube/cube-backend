@@ -3,6 +3,8 @@ import * as crypto from 'crypto'
 import * as uuid from 'uuid'
 import { Service } from 'typedi'
 import { User } from '../models/user'
+import * as _ from 'lodash'
+import { ApiKeyNotFoundError } from '../errors/apiErrors'
 
 @Service()
 export class ApiKeyDao {
@@ -11,6 +13,21 @@ export class ApiKeyDao {
       ...this.generateApiKeyObject(),
       userId: user.uuid,
     })
+  }
+
+  public async findByKey (key: string): Promise<ApiKeyModel> {
+    // tslint:disable-next-line:typedef
+    const apiKey: ApiKey | null = await ApiKey.findOne({
+      where: {
+        key,
+      },
+      include: [User],
+    })
+    if (_.isNull(apiKey)) {
+      throw new ApiKeyNotFoundError()
+    }
+
+    return apiKey.toJSON()
   }
 
   private generateApiKeyObject (): ApiKeyModel {

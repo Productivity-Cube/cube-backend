@@ -1,4 +1,4 @@
-import { Body, Get, JsonController, Params, Post, QueryParams } from 'routing-controllers'
+import { Authorized, Body, Get, JsonController, Params, Post, QueryParams } from 'routing-controllers'
 import { API } from '../publicInterfaces'
 import { EventDao } from '../dao/eventDao'
 import { EventModel } from '../models/event'
@@ -12,6 +12,7 @@ export class EventController {
   }
 
   @Post('/events')
+  @Authorized()
   async index (@Body() body: API.Events.Post.Body): Promise<API.Events.Post.Response> {
     return this.eventDao.create(body.user, body.activity, body.productivityRate)
   }

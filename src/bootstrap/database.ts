@@ -8,7 +8,9 @@ export class Database {
   private readonly sequelize: Sequelize
 
   constructor (connectionInfo: string) {
-    this.sequelize = new Sequelize(connectionInfo)
+    this.sequelize = new Sequelize(connectionInfo, {
+      logging: true
+    })
     this.registerModels()
   }
 
