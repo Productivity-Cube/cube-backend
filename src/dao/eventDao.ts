@@ -2,9 +2,15 @@ import { Event, EventModel } from '../models/event'
 import * as uuid from 'uuid'
 import { Inject, Service } from 'typedi'
 import { ActivityDao } from './activityDao'
-import { ActivityModel } from '../models/activity'
+import { Activity, ActivityModel } from '../models/activity'
 import { UserDao } from './userDao'
 import { User, UserModel } from '../models/user'
+import { API } from '../publicInterfaces'
+import * as Sequelize from 'sequelize'
+import * as _ from 'lodash'
+import * as moment from 'moment'
+
+// tslint:disable:newline-per-chained-call
 
 @Service()
 export class EventDao {
@@ -40,5 +46,48 @@ export class EventDao {
       },
       include: [{ all: true }],
     }))).toJSON()
+  }
+
+  public async find (
+    userName: string,
+    queryParams: API.Events.Get.QueryParams,
+  ): Promise<EventModel[]> {
+    const activityWhere: {
+      name?: string;
+    } = {}
+
+    const eventWhere: {
+      createdAt?: Object;
+    } = {}
+
+    if (!_.isUndefined(queryParams.activity)) {
+      activityWhere.name = queryParams.activity
+    }
+
+    if (!_.isUndefined(queryParams.dateFrom)) {
+      eventWhere.createdAt = {
+        [Sequelize.Op.gte]: moment(queryParams.dateFrom).toDate()
+      }
+    }
+
+    if (!_.isUndefined(queryParams.dateTo)) {
+      eventWhere.createdAt = {
+        ...eventWhere.createdAt,
+        [Sequelize.Op.lte]: moment(queryParams.dateTo).toDate()
+      }
+    }
+
+    return (await Event.findAll({
+      where: <Sequelize.WhereOptions> eventWhere,
+      include: [{
+        model: Activity,
+        where: <Sequelize.WhereOptions> activityWhere,
+      }, {
+        model: User,
+        where: {
+          name: userName
+        }
+      }]
+    })).map((event: Event): EventModel => event.toJSON())
   }
 }
