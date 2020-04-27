@@ -21,7 +21,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: root
         ports:
           - 32574:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3 --sql-mode=""
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v1
         with:
@@ -39,6 +39,7 @@ jobs:
           sudo apt-get install -y mysql-client
           mysql --host 127.0.0.1 --port 32574 -uroot -proot -e "CREATE DATABASE cube;"
           mysql --host 127.0.0.1 --port 32574 -uroot -proot -e "SHOW DATABASES"
+          mysql --host 127.0.0.1 --port 32574 -uroot -proot -e "SET GLOBAL sql_mode = '';"
       - name: npm install and test
         run: |
           cp .env.example .env
