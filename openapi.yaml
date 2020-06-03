@@ -1,0 +1,148 @@
+openapi: 3.0.0
+info:
+  description: "API doc in Swagger"
+  version: "1.0.0"
+  title: "Swagged API"
+tags:
+- name: "login"
+  description: "Login API"
+- name: "events"
+  description: 'events Api'
+- name: "/"
+  description: "Status API"
+- name: 'User'
+  description: "user events"
+- name: 'Group'
+  description: 'user GroupBy'
+paths:
+  /login:
+    post:
+      tags:
+      - "login"
+      summary: "Login to the service"
+      operationId: "loginUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "User"
+        schema:
+          $ref: "#/definitions/Login"
+      responses:
+        "200":
+          description: "OK"
+  /events:
+     post:
+      tags:
+      - 'events'
+      summary: "Post event"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: 'body'
+        name: 'body'
+        description: 'User'
+        schema:
+          $ref: '#/definitions/events'
+      responses:
+        "200":
+          description: "OK"
+  '/user/:userName/events':
+    get:
+      tags:
+        - 'User'
+      summary: "User event"
+      parameters:
+      - in: 'path'
+         name: 'userName'
+         schema:
+         type: 'string'
+         required: 'true'
+      responses:
+        '200':  
+        description: 'name of the User'
+        content:
+          application/json:
+            schema:
+             $ref: '#/components/schemas/Userevent'
+    '/user/:userName/events/groupBy/:groupBy' 
+    get:
+      tags: 
+        - 'Group'  
+      summary: 'GroupBy'  
+      parameters:
+      - in: 'path'
+         name: 'User GroupBY'
+         schema:
+         type: 'string'
+         required: 'true'
+      responses:
+        '200':
+        description: 'User GroupBy'
+        content:
+          application/json:
+            schema:
+             $ref: '#/components/schemas/UserGroup'
+  '/':
+    get:
+      tags:
+        - "/"
+      summary: "Returns status ok on 200 status code"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        '200':
+          description: 'OK'
+definitions:
+  Login:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+  events:
+    type: 'object'
+    properties:
+      user: 
+        type: 'string'
+      activity:
+        type: 'string'
+      productivityRate:
+        type: "integer"
+        format: "int64"
+components:
+  schema:
+    Userevent:
+      type: 'object'
+      properties:
+        uuid:
+          type: 'string'
+        user:
+          type: 'object'
+        userId:
+          type: 'string'
+        activity:
+          type: 'object'
+        activityId:
+          type: 'string'
+        productivityRate:
+          type: 'integer'
+        time:
+          type: 'integer'
+        createdAt:
+          type: 'string'
+components:
+  schema:
+    UserGroup:
+      type: 'object'
+      properties:
+         
+        
+    
+    
