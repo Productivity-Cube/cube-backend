@@ -12,6 +12,11 @@ import {
 import { User } from './user'
 import { Activity } from './activity'
 
+export interface EventPrediction {
+  prediction: number
+  accuracy: number
+}
+
 export interface EventModel {
   uuid?: string
   user?: User
@@ -19,6 +24,7 @@ export interface EventModel {
   activity?: User
   activityId?: string
   productivityRate?: number
+  productivityPrediction?: EventPrediction
   time?: number
   createdAt?: Date | string
 }
