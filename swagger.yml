@@ -11,8 +11,8 @@ tags:
   - name: Public
 paths:
   '/login':
-    post: 
-      tags: 
+    post:
+      tags:
         - Public
       summary: Login API
       description: "Login API doesn't require any password or a key. The user put only her username and when the user is found the endpoint will return full User's object. If the user doesn't exist in the database, this endpoint will create a new entity and return User object including information about API key that is required to use with creating Event"
@@ -45,17 +45,49 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         403:
           $ref: '#/components/responses/ForbiddenError'
-        404: 
+        404:
           $ref: '#/components/responses/ActivityNotFoundError'
-  '/user/:userName/events':
+  '/user/{userName}/events':
     get:
       tags:
         - Public
       summary: Returns a list of user events filtered by date, activity or productivity rate
+      parameters:
+        - in: path
+          name: userName
+          required: true
+          schema:
+            type: string
+          description: User name
+          example: Superuser2000
+        - in: query
+          name: activity
+          schema:
+            type: string
+          description: Activity name
+          example: Call
+        - in: query
+          name: productivityRate
+          schema:
+            type: integer
+          description: Productivity rate from 1 to 3
+          example: 1
+        - in: query
+          name: dateFrom
+          schema:
+            type: string
+          description: Date from in a format 21-08-2020
+          example: 1
+        - in: query
+          name: dateTo
+          schema:
+            type: string
+          description: Date to in a format 21-08-2020
+          example: 1
       responses:
         200:
           $ref: '#/components/responses/EventsResponse'
-        404: 
+        404:
           $ref: '#/components/responses/EventNotFoundError'
 components:
   schemas:
@@ -68,7 +100,7 @@ components:
       type: object
       description: Parameters for login endpoint
       properties:
-        name: 
+        name:
           type: string
           description: Username
           example: Superuser2000
@@ -77,16 +109,16 @@ components:
     ProductivityPrediction:
       type: object
       description: Productivity predicted by AI system based on previous user work
-      properties: 
-        prediction: 
+      properties:
+        prediction:
           type: number
           example: 1.23
           description: Prediction for current acivity - 1 is less productive, 3 is most productive for this activity at the time
-        accuracy: 
+        accuracy:
           type: number
           example: 0.33
           description: Accuracy of AI's prediction from 0 to 1.
-    Event: 
+    Event:
       type: object
       description: Event object
       properties:
@@ -96,7 +128,7 @@ components:
           $ref: '#/components/schemas/uuid'
         activityId:
           $ref: '#/components/schemas/uuid'
-        productivityRate: 
+        productivityRate:
           type: number
           description: Productivity rated by user in a scale from 1 to 3
           example: 1
@@ -104,34 +136,34 @@ components:
           $ref: '#/components/schemas/User'
         activity:
           $ref: '#/components/schemas/Activity'
-        time: 
+        time:
           type: number
           description: Time in minutes calculated since last taken action
           example: 12
-        productivityPrediction: 
+        productivityPrediction:
           $ref: '#/components/schemas/ProductivityPrediction'
     Activity:
       type: object
       description: Activity Object
       properties:
-        name: 
+        name:
           type: string
           description: Activity name - Call, Meeting, Break, End, Work
           example: Call
         uuid:
           $ref: '#/components/schemas/uuid'
-      required: 
+      required:
         - name
         - uuid
     EventParameters:
       type: object
       description: Event
       properties:
-        user: 
+        user:
           type: string
           description: Username
           example: Superuser2000
-        activity: 
+        activity:
           type: string
           description: Activity name - Call, Meeting, Break, End, Work
           example: Call
@@ -145,11 +177,11 @@ components:
       properties:
         uuid:
           $ref: '#/components/schemas/uuid'
-        name: 
+        name:
           type: string
           example: Superuser2000
           description: Unique name
-      required: 
+      required:
         - uuid
         - name
     ApiKey:
@@ -158,23 +190,23 @@ components:
       properties:
         uuid:
           $ref: '#/components/schemas/uuid'
-        key: 
+        key:
           type: string
           example: abcdef12345
           description: Unique API key used to confirm user's identity when posting to the API
-        userId: 
+        userId:
           $ref: '#/components/schemas/uuid'
-      required: 
+      required:
         - uuid
         - key
         - userId
     UserWithApiKey:
-      allOf: 
+      allOf:
         - $ref: '#/components/schemas/User'
         - type: object
           description: User object with API Key
           properties:
-            apiKey: 
+            apiKey:
               $ref: '#/components/schemas/ApiKey'
     UnauthorizedError:
       type: object
@@ -224,7 +256,7 @@ components:
           type: number
           example: 404
   requestBodies:
-    LoginBody: 
+    LoginBody:
       required: true
       content:
         application/json:
@@ -251,7 +283,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Event'
-    LoginResponse: 
+    LoginResponse:
       description: Returns User object with or without API key
       content:
         application/json:
@@ -285,7 +317,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ForbiddenError'
-            
+
     ActivityNotFoundError:
       description: This error is thrown when an activity has not been found in the database
       content:
