@@ -1,0 +1,302 @@
+openapi: 3.0.0
+info:
+  version: '0.1'
+  title: 'Productivity Cube API'
+  description: 'Productivity Cube API'
+servers:
+  - url: https://localhost/api/v1/
+    description: Local Server
+tags:
+  - name: Protected
+  - name: Public
+paths:
+  '/login':
+    post: 
+      tags: 
+        - Public
+      summary: Login API
+      description: "Login API doesn't require any password or a key. The user put only her username and when the user is found the endpoint will return full User's object. If the user doesn't exist in the database, this endpoint will create a new entity and return User object including information about API key that is required to use with creating Event"
+      requestBody:
+        $ref: '#/components/requestBodies/LoginBody'
+      responses:
+        200:
+          $ref: '#/components/responses/LoginResponse'
+  '/status':
+    get:
+      tags:
+        - Public
+      summary: Check status of the service
+      responses:
+        200:
+          $ref: '#/components/responses/StatusResponse'
+  '/events':
+    post:
+      tags:
+        - Protected
+      summary: Created an event for authorized user
+      requestBody:
+        $ref: '#/components/requestBodies/EventBody'
+      responses:
+        200:
+          $ref: '#/components/responses/CreateEventResponse'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404: 
+          $ref: '#/components/responses/ActivityNotFoundError'
+  '/user/:userName/events':
+    get:
+      tags:
+        - Public
+      summary: Returns a list of user events filtered by date, activity or productivity rate
+      responses:
+        200:
+          $ref: '#/components/responses/EventsResponse'
+        404: 
+          $ref: '#/components/responses/EventNotFoundError'
+components:
+  schemas:
+    uuid:
+      type: string
+      format: uuid
+      example: b25a96ed-4e47-4791-a987-5c069129073d
+      description: Unique uuid
+    LoginParameters:
+      type: object
+      description: Parameters for login endpoint
+      properties:
+        name: 
+          type: string
+          description: Username
+          example: Superuser2000
+      required:
+        - name
+    ProductivityPrediction:
+      type: object
+      description: Productivity predicted by AI system based on previous user work
+      properties: 
+        prediction: 
+          type: number
+          example: 1.23
+          description: Prediction for current acivity - 1 is less productive, 3 is most productive for this activity at the time
+        accuracy: 
+          type: number
+          example: 0.33
+          description: Accuracy of AI's prediction from 0 to 1.
+    Event: 
+      type: object
+      description: Event object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/uuid'
+        userId:
+          $ref: '#/components/schemas/uuid'
+        activityId:
+          $ref: '#/components/schemas/uuid'
+        productivityRate: 
+          type: number
+          description: Productivity rated by user in a scale from 1 to 3
+          example: 1
+        user:
+          $ref: '#/components/schemas/User'
+        activity:
+          $ref: '#/components/schemas/Activity'
+        time: 
+          type: number
+          description: Time in minutes calculated since last taken action
+          example: 12
+        productivityPrediction: 
+          $ref: '#/components/schemas/ProductivityPrediction'
+    Activity:
+      type: object
+      description: Activity Object
+      properties:
+        name: 
+          type: string
+          description: Activity name - Call, Meeting, Break, End, Work
+          example: Call
+        uuid:
+          $ref: '#/components/schemas/uuid'
+      required: 
+        - name
+        - uuid
+    EventParameters:
+      type: object
+      description: Event
+      properties:
+        user: 
+          type: string
+          description: Username
+          example: Superuser2000
+        activity: 
+          type: string
+          description: Activity name - Call, Meeting, Break, End, Work
+          example: Call
+        productivityRate:
+          type: number
+          description: Productivity rated by user in a scale from 1 to 3
+          example: 1
+    User:
+      type: object
+      description: User Object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/uuid'
+        name: 
+          type: string
+          example: Superuser2000
+          description: Unique name
+      required: 
+        - uuid
+        - name
+    ApiKey:
+      type: object
+      description: Api key assigned to the user
+      properties:
+        uuid:
+          $ref: '#/components/schemas/uuid'
+        key: 
+          type: string
+          example: abcdef12345
+          description: Unique API key used to confirm user's identity when posting to the API
+        userId: 
+          $ref: '#/components/schemas/uuid'
+      required: 
+        - uuid
+        - key
+        - userId
+    UserWithApiKey:
+      allOf: 
+        - $ref: '#/components/schemas/User'
+        - type: object
+          description: User object with API Key
+          properties:
+            apiKey: 
+              $ref: '#/components/schemas/ApiKey'
+    UnauthorizedError:
+      type: object
+      example: '{"message": "Unauthorized"}'
+    ForbiddenError:
+      type: object
+      properties:
+        message:
+          type: array
+          items:
+            type: object
+            example: 'You are not allowed to execute this operation'
+        errorCode:
+          type: number
+          example: 403
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: array
+          items:
+            type: object
+            example: '{"groupId":"groupId is required"}'
+        errorCode:
+          type: number
+          example: 400
+    ActivityNotFoundError:
+      type: object
+      properties:
+        message:
+          type: array
+          items:
+            type: object
+            example: 'Activity not foound'
+        errorCode:
+          type: number
+          example: 404
+    UserNotFoundError:
+      type: object
+      properties:
+        message:
+          type: array
+          items:
+            type: object
+            example: 'User not foound'
+        errorCode:
+          type: number
+          example: 404
+  requestBodies:
+    LoginBody: 
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LoginParameters'
+    EventBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EventParameters'
+  responses:
+    EventsResponse:
+      description: A list of events
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Event'
+    CreateEventResponse:
+      description: Creates an event for authorized user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Event'
+    LoginResponse: 
+      description: Returns User object with or without API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserWithApiKey'
+    StatusResponse:
+      description: Returns status of the service
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+                example: true
+    UnauthorizedError:
+      description: Authorization token or x-api-key is missing orinvalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+    ValidationError:
+      description: This error is thrown when a validation does not pass
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    ForbiddenError:
+      description: This error is thrown when a user is not authorized for a specific endpoint
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+            
+    ActivityNotFoundError:
+      description: This error is thrown when an activity has not been found in the database
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ActivityNotFoundError'
+    EventNotFoundError:
+      description: This error is thrown when an activity has not been found in the database
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/ActivityNotFoundError'
+              - $ref: '#/components/schemas/UserNotFoundError'
