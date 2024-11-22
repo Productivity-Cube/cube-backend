@@ -88,7 +88,7 @@
     "http": "0.0.1-security",
     "json2csv": "^5.0.1",
     "kcors": "^2.2.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
